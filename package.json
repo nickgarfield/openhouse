@@ -5,8 +5,10 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
+    "build": "webpack",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "heroku-run-build-script": true,
   "author": "",
   "license": "ISC",
   "dependencies": {
