@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.1",
+    "feather-server-node": "^0.1.21",
     "jade": "^1.11.0",
     "peer": "^0.5.3",
     "socket.io": "^2.3.0"

@@ -2,7 +2,7 @@ const rooms = require("../../state/rooms");
 
 module.exports = function(req, res, next) {
   // Parse request
-  const peerId = req.body.peerId; // TODO: Get this from a JWT
+  const peerId = req.user.id;
   const roomId = req.params.id;
 
   console.log(`POST /rooms/${roomId}/enter`);

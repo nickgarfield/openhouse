@@ -4,7 +4,7 @@ module.exports = function(req, res, next) {
   console.log("POST /rooms/current/exit");
 
   // Parse request
-  const peerId = req.body.peerId; // TODO: Get this from a JWT
+  const peerId = req.user.id;
 
   // Fetch relevant parties
   var currentRoomId = rooms.getRoomForPeer(peerId);
