@@ -10,7 +10,7 @@ var cors = require("cors");
 app.use(
   cors({
     credentials: true,
-    origin: ["https://openhouse-client.herokuapp.com/", "http://localhost:3000"]
+    origin: ["https://openhouse-client.herokuapp.com", "http://localhost:3000"]
   })
 );
 
