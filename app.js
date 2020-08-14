@@ -50,5 +50,6 @@ peerServer.on("disconnect", function(socket) {
   else rooms.update(currentRoomId);
 });
 
-// Now listen to your ip and port.
-server.listen(9000);
+// Now listen
+const PORT = process.env.PORT || 9000;
+server.listen(PORT);
