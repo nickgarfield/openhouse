@@ -4,11 +4,12 @@ This is the server that powers the Openhouse project. In the future, this repo m
 
 To get started:
 
+We use [Feather](https://feather.id) for Authentication. In order for the server to run locally, you will need to supply a Feather secret key as an env variable.
+
+To get started, make an account w/Feather, and set your Feather secret key as `FEATHER_API_KEY` via an environment variable
+
 ```bash
 yarn install
-yarn test
-yarn start
-# go to localhost:3000
+FEATHER_API_KEY=<YOUR KEY> node app.js
+# now running on localhost:9000
 ```
-
-For this setup to work, you'll also need a backend server running (see [repo](https://github.com/nickgarfield/openhouse-server))
