@@ -19,7 +19,6 @@ io.on("connection", socket => {
   socket.on("join-room", (roomId, peerId) => {
     socket.join(roomId);
     socket.to(roomId).broadcast.emit("peer-joined-room", peerId);
-
     socket.on("disconnect", () =>
       socket.to(roomId).broadcast.emit("peer-exited-room", peerId)
     );

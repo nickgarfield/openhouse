@@ -1,7 +1,10 @@
 const socket = io("/");
 const peerGrid = document.getElementById("peer-grid");
-const myPeer = new Peer({ host: "localhost", port: "3001" });
 const peers = {};
+const myPeer = new Peer({
+  host: process.env.PEERJS_HOST,
+  port: process.env.PEERJS_PORT
+});
 
 myPeer.on("open", myPeerId => {
   navigator.mediaDevices
@@ -33,7 +36,7 @@ function addPeer(call, stream) {
   audioElem.srcObject = stream;
   audioElem.addEventListener("loadedmetadata", () => audioElem.play());
   peerElem.className = "peer";
-  peerElem.appendChild(document.createTextNode("User " + call.peer));
+  peerElem.appendChild(document.createTextNode("Peer " + call.peer));
   peerElem.appendChild(audioElem);
   peerGrid.appendChild(peerElem);
   call.on("close", () => peerElem.remove());
