@@ -4,8 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "heroku-prebuild": "npm install -g serve",
+    "heroku-postbuild": "npm run build",
     "dev": "nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "serve -s build"
   },
   "author": "Feather <hello@feather.id> (https://feather.id)",
   "license": "ISC",
