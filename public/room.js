@@ -10,6 +10,7 @@ myPeer.on("open", myPeerId => {
   navigator.mediaDevices
     .getUserMedia({ video: false, audio: true })
     .then(myStream => {
+      addPeer(null, null);
       myPeer.on("call", call => {
         call.answer(myStream);
         call.on("stream", peerStream => addPeer(call, peerStream));
@@ -30,14 +31,18 @@ function hangUp(peerId) {
 }
 
 function addPeer(call, stream) {
-  peers[call.peer] = call;
   var peerElem = document.createElement("div");
-  var audioElem = document.createElement("audio");
-  audioElem.srcObject = stream;
-  audioElem.addEventListener("loadedmetadata", () => audioElem.play());
   peerElem.className = "peer";
-  peerElem.appendChild(document.createTextNode("Peer " + call.peer));
-  peerElem.appendChild(audioElem);
+  if (call && stream) {
+    peers[call.peer] = call;
+    var audioElem = document.createElement("audio");
+    audioElem.srcObject = stream;
+    audioElem.addEventListener("loadedmetadata", () => audioElem.play());
+    peerElem.appendChild(document.createTextNode("Peer " + call.peer));
+    peerElem.appendChild(audioElem);
+    call.on("close", () => peerElem.remove());
+  } else {
+    peerElem.appendChild(document.createTextNode("You"));
+  }
   peerGrid.appendChild(peerElem);
-  call.on("close", () => peerElem.remove());
 }
