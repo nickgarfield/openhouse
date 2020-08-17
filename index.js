@@ -12,7 +12,13 @@ app.get("/", (req, res) => {
 });
 
 app.get("/:id", (req, res) => {
-  res.render("room", { roomId: req.params.id });
+  res.render("room", {
+    roomId: req.params.id,
+    peerjs: {
+      host: process.env.PEERJS_HOST,
+      port: process.env.PEERJS_PORT
+    }
+  });
 });
 
 io.on("connection", socket => {

@@ -2,8 +2,8 @@ const socket = io("/");
 const peerGrid = document.getElementById("peer-grid");
 const peers = {};
 const myPeer = new Peer({
-  host: process.env.PEERJS_HOST,
-  port: process.env.PEERJS_PORT
+  host: PEERJS_HOST,
+  port: PEERJS_PORT
 });
 
 myPeer.on("open", myPeerId => {
