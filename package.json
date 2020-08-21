@@ -1,13 +1,12 @@
 {
-  "name": "oh-server",
-  "version": "1.0.0",
+  "name": "openhouse",
+  "version": "0.0.1",
   "description": "",
   "main": "index.js",
   "scripts": {
     "dev": "nodemon index.js",
     "start": "node index.js"
   },
-  "author": "Nick Garfield (https://twitter.com/nick_garfield)",
   "license": "MIT",
   "dependencies": {
     "ejs": "^3.1.3",
