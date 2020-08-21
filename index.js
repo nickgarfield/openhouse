@@ -5,10 +5,10 @@ const io = require("socket.io")(server);
 const { v4: uuidv4 } = require("uuid");
 
 app.set("view engine", "ejs");
-app.use(express.static("public"));
+app.use(express.static(__dirname + "/public"));
 
 app.get("/", (req, res) => {
-  res.redirect(`/${uuidv4()}`); // Redirect to a new room
+  res.redirect(`/${uuidv4()}`);
 });
 
 app.get("/:id", (req, res) => {
