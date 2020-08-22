@@ -1,48 +1,77 @@
 const socket = io("/");
-const peerGrid = document.getElementById("peer-grid");
-const peers = {};
-const myPeer = new Peer({
+var remotePeers = {};
+var localStream = null;
+const localPeer = new Peer({
   host: PEERJS_HOST,
   port: PEERJS_PORT
 });
 
-myPeer.on("open", myPeerId => {
-  navigator.mediaDevices
-    .getUserMedia({ video: false, audio: true })
-    .then(myStream => {
-      addPeer(null, null);
-      myPeer.on("call", call => {
-        call.answer(myStream);
-        call.on("stream", peerStream => addPeer(call, peerStream));
-      });
-      socket.on("peer-joined-room", peerId => call(peerId, myStream));
-      socket.on("peer-exited-room", peerId => hangUp(peerId));
-      socket.emit("join-room", ROOM_ID, myPeerId);
+const peerGrid = document.getElementById("peer-grid");
+const muteButton = document.getElementById("mute-button");
+
+localPeer.on("open", localPeerId => {
+  const opt = { video: false, audio: true };
+  navigator.mediaDevices.getUserMedia(opt).then(s => {
+    localStream = s;
+    localStream.getAudioTracks()[0].onmute = evt => {
+      localStream.getAudioTracks()[0].enabled = false;
+      didToggleIsMuted();
+    };
+    localStream.getAudioTracks()[0].onunmute = evt => {
+      localStream.getAudioTracks()[0].enabled = true;
+      didToggleIsMuted();
+    };
+    localPeer.on("call", call => {
+      call.answer(localStream);
+      call.on("stream", remoteStream => addPeerProfile(call, remoteStream));
     });
+    socket.on("peer-joined-room", peerId => call(peerId, localStream));
+    socket.on("peer-exited-room", peerId => hangUp(peerId));
+    socket.emit("join-room", ROOM_ID, localPeerId);
+    addLocalProfile();
+  });
 });
 
-function call(peerId, myStream) {
-  const call = myPeer.call(peerId, myStream);
-  call.on("stream", peerStream => addPeer(call, peerStream));
+function call(remotePeerId, localStream) {
+  const call = localPeer.call(remotePeerId, localStream);
+  call.on("stream", remoteStream => addPeerProfile(call, remoteStream));
 }
 
-function hangUp(peerId) {
-  if (peers[peerId]) peers[peerId].close();
+function hangUp(remotePeerId) {
+  if (remotePeers[remotePeerId]) remotePeers[remotePeerId].close();
 }
 
-function addPeer(call, stream) {
+function toggleIsMuted() {
+  const track = localStream.getAudioTracks()[0];
+  if (!track.muted) track.enabled = !track.enabled;
+  // TODO else display warning (cannot record audio in this case)
+  didToggleIsMuted();
+}
+
+function didToggleIsMuted() {
+  muteButton.innerHTML =
+    localStream.getAudioTracks()[0].enabled &&
+    !localStream.getAudioTracks()[0].muted
+      ? "Mute"
+      : "Unmute";
+}
+
+function addLocalProfile() {
   var peerElem = document.createElement("div");
   peerElem.className = "peer";
-  if (call && stream) {
-    peers[call.peer] = call;
-    var audioElem = document.createElement("audio");
-    audioElem.srcObject = stream;
-    audioElem.addEventListener("loadedmetadata", () => audioElem.play());
-    peerElem.appendChild(document.createTextNode("Peer " + call.peer));
-    peerElem.appendChild(audioElem);
-    call.on("close", () => peerElem.remove());
-  } else {
-    peerElem.appendChild(document.createTextNode("You"));
-  }
+  peerElem.appendChild(document.createTextNode("You"));
+  peerGrid.appendChild(peerElem);
+}
+
+function addPeerProfile(call, stream) {
+  var peerElem = document.createElement("div");
+  peerElem.className = "peer";
+  var audioElem = document.createElement("audio");
+  audioElem.srcObject = stream;
+  audioElem.addEventListener("loadedmetadata", () => audioElem.play());
+  peerElem.appendChild(document.createTextNode("Peer " + call.peer));
+  peerElem.appendChild(audioElem);
+  remotePeers[call.peer] = call;
+  call.on("close", () => peerElem.remove());
   peerGrid.appendChild(peerElem);
 }
