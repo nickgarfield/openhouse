@@ -63,7 +63,7 @@ io.on("connection", socket => {
     socket.on("disconnect", () => {
       rooms[roomId].peers = rooms[roomId].peers.filter(i => i !== peerId);
       if (rooms[roomId].peers.length === 0) delete rooms[roomId];
-      socket.to(roomId).broadcast.emit("peer-exited-room", peerId);
+      socket.to(roomId).broadcast.emit("peer-left-room", peerId);
     });
   });
 });

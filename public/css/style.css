@@ -11,6 +11,12 @@
   right: 10px;
 }
 
+#leave-button {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+}
+
 .peer {
   width: 100%;
   height: 100%;
