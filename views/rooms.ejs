@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <script src="/js/rooms.js" defer></script>
+  </head>
+  <body>
+    <h1>Openhouse</h1>
+    <div>
+      <% for (var i = 0; i < Object.keys(rooms).length; i++) { %>
+          <button onClick="joinRoom(event)" name=<%= Object.keys(rooms)[i]%>> <%= Object.keys(rooms)[i] %> </button>
+      <% } %>
+    </div>
+  </body>
+</html>
