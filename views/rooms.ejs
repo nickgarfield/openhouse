@@ -2,14 +2,15 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <title></title>
+    <title>Openhouse</title>
     <script src="/js/rooms.js" defer></script>
   </head>
   <body>
     <h1>Openhouse</h1>
+    <button onClick="startRoom()">Start room</button>
     <div>
-      <% for (var i = 0; i < Object.keys(rooms).length; i++) { %>
-          <button onClick="joinRoom(event)" name=<%= Object.keys(rooms)[i]%>> <%= Object.keys(rooms)[i] %> </button>
+      <% for (var i = 0; i < Object.values(rooms).length; i++) { %>
+          <button onClick="joinRoom(event)" name=<%= Object.values(rooms)[i].id%>> <%= Object.values(rooms)[i].title %> </button>
       <% } %>
     </div>
   </body>
