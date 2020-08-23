@@ -17,6 +17,10 @@ app.get("/", (req, res) => {
 });
 
 app.get("/r/:id", (req, res) => {
+  if (!rooms[req.params.id]) {
+    res.render("404");
+    return;
+  }
   res.render("room", {
     room: rooms[req.params.id],
     peerjs: {
@@ -40,6 +44,12 @@ app.post("/rooms", (req, res) => {
   };
   rooms[room.id] = room;
   res.json(room);
+});
+
+// NOT FOUND
+
+app.get("*", function(req, res) {
+  res.render("404");
 });
 
 // WEBSOCKETS
