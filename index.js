@@ -3,12 +3,13 @@ const app = express();
 const server = require("http").Server(app);
 const io = require("socket.io")(server);
 const { v4: uuidv4 } = require("uuid");
+var rooms = {};
 
 app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/public"));
 
 app.get("/", (req, res) => {
-  res.redirect(`/${uuidv4()}`);
+  res.render("rooms", { rooms });
 });
 
 app.get("/:id", (req, res) => {
@@ -23,11 +24,15 @@ app.get("/:id", (req, res) => {
 
 io.on("connection", socket => {
   socket.on("join-room", (roomId, peerId) => {
+    if (rooms[roomId]) rooms[roomId].peers.push(peerId);
+    else rooms[roomId] = { name: null, peers: [peerId] };
     socket.join(roomId);
     socket.to(roomId).broadcast.emit("peer-joined-room", peerId);
-    socket.on("disconnect", () =>
-      socket.to(roomId).broadcast.emit("peer-exited-room", peerId)
-    );
+    socket.on("disconnect", () => {
+      rooms[roomId].peers = rooms[roomId].peers.filter(i => i !== peerId);
+      if (rooms[roomId].peers.length === 0) delete rooms[roomId];
+      socket.to(roomId).broadcast.emit("peer-exited-room", peerId);
+    });
   });
 });
 
