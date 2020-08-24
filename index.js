@@ -60,6 +60,9 @@ io.on("connection", socket => {
     else rooms[roomId] = { title: null, peers: [peerId] };
     socket.join(roomId);
     socket.to(roomId).broadcast.emit("peer-joined-room", peerId);
+    socket.on("toggle-mute", (peerId, isMuted) =>
+      socket.to(roomId).broadcast.emit("peer-toggled-mute", peerId, isMuted)
+    );
     socket.on("disconnect", () => {
       rooms[roomId].peers = rooms[roomId].peers.filter(i => i !== peerId);
       if (rooms[roomId].peers.length === 0) delete rooms[roomId];
