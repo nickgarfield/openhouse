@@ -1,0 +1,21 @@
+@import "base.css";
+
+.peer-container {
+  position: relative;
+  padding-bottom: 100%;
+}
+
+.peer {
+  display: flex;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background: #e3e8ef;
+  border-radius: 9999px;
+  text-align: center;
+}
+
+.peer-name {
+  margin: auto;
+  font-weight: 500;
+}
