@@ -64,21 +64,40 @@ function onToggleIsMuted() {
 }
 
 function addLocalProfile() {
+  var peerName = document.createElement("span");
+  peerName.className = "peer-name";
+  peerName.appendChild(document.createTextNode("You"));
+
   var peerElem = document.createElement("div");
   peerElem.className = "peer";
-  peerElem.appendChild(document.createTextNode("You"));
-  peerGrid.appendChild(peerElem);
+  peerElem.appendChild(peerName);
+
+  var container = document.createElement("div");
+  container.className = "peer-container";
+  container.appendChild(peerElem);
+
+  peerGrid.appendChild(container);
 }
 
 function addPeerProfile(call, stream) {
-  var peerElem = document.createElement("div");
-  peerElem.className = "peer";
+  var peerName = document.createElement("span");
+  peerName.className = "peer-name";
+  peerName.appendChild(document.createTextNode(call.peer.substring(0, 4)));
+
   var audioElem = document.createElement("audio");
   audioElem.srcObject = stream;
   audioElem.addEventListener("loadedmetadata", () => audioElem.play());
-  peerElem.appendChild(document.createTextNode("Peer " + call.peer));
+
+  var peerElem = document.createElement("div");
+  peerElem.className = "peer";
+  peerElem.appendChild(peerName);
   peerElem.appendChild(audioElem);
+
+  var container = document.createElement("div");
+  container.className = "peer-container";
+  container.appendChild(peerElem);
+
   remotePeers[call.peer] = call;
-  call.on("close", () => peerElem.remove());
-  peerGrid.appendChild(peerElem);
+  call.on("close", () => container.remove());
+  peerGrid.appendChild(container);
 }
