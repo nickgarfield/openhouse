@@ -4,7 +4,23 @@ const server = require("http").Server(app);
 const io = require("socket.io")(server);
 const bodyParser = require("body-parser");
 const { v4: uuidv4 } = require("uuid");
-var rooms = {};
+var rooms = {
+  llama: {
+    id: "llama",
+    title: "Llama Room",
+    peers: []
+  },
+  gecko: {
+    id: "gecko",
+    title: "Gecko Room",
+    peers: []
+  },
+  flamingo: {
+    id: "flamingo",
+    title: "Flamingo Room",
+    peers: []
+  }
+};
 
 app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/public"));
@@ -28,10 +44,6 @@ app.get("/r/:id", (req, res) => {
       port: process.env.PEERJS_PORT
     }
   });
-});
-
-app.get("/start", (req, res) => {
-  res.render("startRoom", {});
 });
 
 // API
@@ -65,7 +77,6 @@ io.on("connection", socket => {
     );
     socket.on("disconnect", () => {
       rooms[roomId].peers = rooms[roomId].peers.filter(i => i !== peerId);
-      if (rooms[roomId].peers.length === 0) delete rooms[roomId];
       socket.to(roomId).broadcast.emit("peer-left-room", peerId);
     });
   });
